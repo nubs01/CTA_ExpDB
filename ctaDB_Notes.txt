@@ -1,0 +1,74 @@
+                                 __        ____  ____ 
+                           _____/ /_____ _/ __ \/ __ )
+                          / ___/ __/ __ `/ / / / __  |
+                         / /__/ /_/ /_/ / /_/ / /_/ / 
+                         \___/\__/\__,_/_____/_____/  
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+                                                      
+                   _____ __                  __                
+                  / ___// /________  _______/ /___  __________ 
+                  \__ \/ __/ ___/ / / / ___/ __/ / / / ___/ _ \
+                 ___/ / /_/ /  / /_/ / /__/ /_/ /_/ / /  /  __/
+                /____/\__/_/   \__,_/\___/\__/\__,_/_/   \___/ 
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Animal (class)
+    - DOB
+    - Genotype
+    - Gender
+    - Protocol
+    - Anim ID
+    - Pre-op
+        - Date
+        - Handling or habituation
+        - Comments
+    - Surgery
+        - Pre-op weight
+        - Post-op weight
+        - Injection
+            - Virus
+            - Site ( x4 default)
+                - AP
+                - ML
+                - DV
+                - Volume
+    - Water Deprivation Start
+        - Date
+        - Time
+    - Bottle Tests
+        - Date
+        - Time
+        - Substance
+        - Time of test (min)
+        - Start Weight (of bottle)
+        - End Weight (of bottle)
+    - IOC Tests
+        - Type (Habituation, Taste Battery, CTA Training, Sacc Test)
+        - Date
+        - Time
+        - Weight
+        - Substances
+            - Substance
+            - Calibrated Release Time (ms)
+            - Avg. Volume per trial (μL)
+            - # of trials
+            - Total of substance
+        - Total Given (μL) (Automatic)
+        - If CTA Training:
+            - Injection Time
+            - Injection Type (0.15M LiCl or Saline)
+            - Volume
+    - Perfusion date
+
+    - Nees output function to print all animal info to string/pdf
+
+Main DB is saved dict with Animal IDs linked to paths to animal object files
+Each Animal object will be saved to its animal folder
+
+run DB
+     - Open GUI: animal select & new button
+     - Animal Info GUI
+
+make function to plot bottle test results for each animal & for all animals
+maybe just return results for each animal in a dataframe (export_bottle_tests)
