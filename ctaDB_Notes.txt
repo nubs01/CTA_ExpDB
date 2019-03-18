@@ -48,8 +48,17 @@ Animal (class)
         - Date
         - Time
         - Weight
+        - Recording_Name
+        - Recording_settings
+            - High-pass filter
+            - Notch Filter
+            - Sampling Rate
+            - Digital Inputs
+            - # of Channels
         - Substances
             - Substance
+            - Port
+            - Intan_Channel
             - Calibrated Release Time (ms)
             - Avg. Volume per trial (μL)
             - # of trials
