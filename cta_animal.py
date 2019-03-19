@@ -134,6 +134,18 @@ class ioc_test():
             out = '    '+out.replace('\n','\n    ')
         return print_dict(tmp)
 
+    def get_summary(self):
+        tmp = self.test_data
+        out = ''
+        if tmp['Test Time'] != None:
+            out = tmp['Test Time'].strftime('%m-%d-%y')
+        else:
+            out = 'No Date'
+        out = out+'    '+tmp['Test Type']
+        if tmp['Rec Basename'] != None:
+            out = out+'*'
+        return out
+
 
 # Data structure to hold animal info and handling, habituation and experiment logs 
 class animal():
@@ -191,4 +203,34 @@ class animal():
             new_test = ioc_test(new_test)
         self.ioc_tests.append(new_test)
     
+    def set_pre_op(self,pre_op):
+        self.pre_op = pre_op.copy()
 
+    def set_bottle_tests(self,bottle_tests):
+        self.bottle_tests = bottle_tests.copy()
+
+    def set_ioc_tests(self,ioc_tests):
+        self.ioc_tests = ioc_tests.copy()
+
+    def get_ioc_summaries(self):
+        out = ''
+        for t in self.ioc_tests:
+            out = out+t.get_summary()+'\n'
+        return out
+
+    def get_animal_data(self):
+        out = {'Creation Date':self.creation_date, 'Animal Info':self.anim_info,
+                'Pre-op':self.pre_op,'Surgery':self.surgery,'Water Dep Start':self.water_dep_start,
+                'Bottle Tests':self.bottle_tests,'IOC Tests':self.ioc_tests,
+                'Perfusion Date':self.perfusion_date}
+        return out
+
+    def set_all_animal_data(self,newDat):
+        self.creation_date = newDat['Creation Date']
+        self.anim_info = newDat['Animal Info']
+        self.pre_op = newDat['Pre-Op']
+        self.surgery = newDat['Surgery']
+        self.water_dep_start = newDat['Water Dep Start']
+        self.bottle_tests = newDat['Bottle Tests']
+        self.ioc_tests = newDat['IOC Tests']
+        self.perfusion_date = newDat['Perfusion Date']
