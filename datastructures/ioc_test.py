@@ -1,3 +1,4 @@
+import re
 import pandas as pd
 import datetime as dt
 from copy import deepcopy
