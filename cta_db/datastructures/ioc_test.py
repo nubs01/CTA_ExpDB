@@ -2,7 +2,7 @@ import re
 import pandas as pd
 import datetime as dt
 from copy import deepcopy
-from datastructures.data_print import *
+from .data_print import *
 
 class ioc_test(dict):
 
@@ -58,7 +58,7 @@ class ioc_test(dict):
                     'Total Volume Consumed':sum(taste_defaults['array']['Total Volume']),
                     'Rec Basename':None,'Rec Settings':rec_defaults['array'],
                     'Injection':injection_defaults['None'],'Comments':None}
-    
+
     CTA_TEST = {'Test Type':'CTA Test','Test Time':None,
                 'Weight':None,'Taste Info':taste_defaults['cta_test'],
                 'Total Volume Consumed':sum(taste_defaults['cta_test']['Total Volume']),
@@ -72,7 +72,7 @@ class ioc_test(dict):
         if isinstance(test_data,str):
             test_data = ioc_test.DEFAULT_MAP.get(test_data)
             if test_data == None:
-                raise ValueError('Invalid default type. options are: ' + ioc_test.DEAFAULT_MAP.keys())
+                raise ValueError('Invalid default type. options are: ' + ioc_test.DEFAULT_MAP.keys())
         if test_data != None:
             super().__init__(**test_data)
         else:

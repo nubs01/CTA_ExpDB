@@ -1,6 +1,7 @@
 import pandas as pd
 import datetime as dt
 from copy import deepcopy
+import re
 
 # check datetime string format and convert to datetime
 def get_datetime_from_str(date_str):

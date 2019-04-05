@@ -1,6 +1,7 @@
 import pandas as pd
 from copy import deepcopy
-from datastructures.data_print import *
+from .data_print import *
+
 
 class mouse_surgery(dict):
 
@@ -22,11 +23,11 @@ class mouse_surgery(dict):
             'Working Implant Channels':32,'Injections':[],'Comments':None}
 
 
-    SURGERY_MAP = {'BLA_cre_implant':CRE_IMPLANT,'BLA_gfp_implant':GFP_IMPLANT,'Blank':BLANK}
+    SURGERY_MAP = {'BLA_Cre_implant':CRE_IMPLANT,'BLA_GFP_implant':GFP_IMPLANT,'blank':BLANK}
     INJECTION_SITES = {'BLA':BLA,'RE':RE}
     INJECTION_VIRUSES = {'AAV-Cre':'AAV5-CamKII-Cre-GFP','AAV-GFP':'AAV5-CamKII-GFP'}
 
-    def __init__(self,surgery_type,date=None,num_ch=None,pre_weight=None,
+    def __init__(self,surgery_type='blank',date=None,num_ch=None,pre_weight=None,
             post_weight=None,injections=None,comments=None,**kwargs):
         if isinstance(date,str):
             date = get_datetime_from_str(date)

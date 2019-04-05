@@ -1,9 +1,11 @@
 import pandas as pd
 import datetime as dt
 from copy import deepcopy
-import datastructures.ioc_test as ioc
-import datastructures.mouse_surgery as surgery
-from datastructures.data_print import *
+from ..datastructures import ioc_test as ioc, mouse_surgery as surgery
+from .data_print import *
+import matplotlib
+matplotlib.use('TkAgg')
+import seaborn as sns
 
 # Data structure to hold animal info and handling, habituation and experiment logs 
 class animal():

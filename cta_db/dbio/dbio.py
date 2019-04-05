@@ -1,9 +1,8 @@
 import os
 import pickle
 import platform
-from datastructures import cta_animal
 
-DB_FILE = 'cta_anim_db.p'
+DB_FILE = 'data/cta_anim_db.p'
 OS = platform.node()
 
 def save_anim_db(anim_db,save_file=DB_FILE):
