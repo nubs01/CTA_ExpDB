@@ -18,6 +18,16 @@ def get_datetime_from_str(date_str):
         raise ValueError('Invalid date string format')
     return out
 
+def get_date_str(date,fmt='%m/%d/%y'):
+    null_convert = {'%m':'mm','%d':'dd','%y':'yy','%H':'HH','%M':'MM'}
+    if date==None:
+        out = fmt
+        for k,v in null_convert.items():
+            out = out.replace(k,v)
+        return out
+    return date.strftime(fmt)
+        
+
 # Turns a dict into a string recursively
 def print_dict(dic,tabs=0):
     dic = deepcopy(dic)

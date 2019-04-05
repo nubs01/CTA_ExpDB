@@ -1,7 +1,8 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, scrolledtext
 import tk_widgets as tkw
-from datastructures import cta_animal as cta, mouse_surgery as surgery
+from cta_db.datastructures import mouse_surgery as surgery
+from cta_db.datastructures.data_print import *
 
 class surgery_pane(ttk.Frame):
     def __init__(self,parent,master,*args,**kwargs):
@@ -25,7 +26,7 @@ class surgery_pane(ttk.Frame):
         self.templates = list(surgery.SURGERY_MAP.keys())
         self.button_frame = ttk.Frame(self)
         self.template_var.set(self.templates[0])
-        self.template_select = ttk.OptionMenu(self.button_frame,self.template_var,*self.templates)
+        self.template_select = ttk.OptionMenu(self.button_frame,self.template_var,self.template_var.get(),*self.templates)
         self.template_select.pack(side='left',padx=2,pady=1)
         self.add_button = ttk.Button(self.button_frame,text='New Surgery',
                                     command=self.new_surgery)
@@ -67,7 +68,7 @@ class surgery_pane(ttk.Frame):
 
 
     def new_surgery(self):
-        tmp = cta.mouse_surgery(self.template_var.get())
+        tmp = surgery(self.template_var.get())
         self.surgery_data.append(tmp)
         tmp_frame = surgery_segment(self.scrollpane.viewport,self.master,data=tmp,index=len(self.surgery_data)-1)
         self.surgery_segments.append(tmp_frame)
@@ -164,12 +165,12 @@ class surgery_segment(ttk.Frame):
         injection_label = ttk.Label(line,text='Injections',foreground='red',font=('Arial Bold',16))
         self.virus_var = tk.StringVar()
         self.site_var = tk.StringVar()
-        self.virus_list = cta.mouse_surgery.INJECTION_VIRUSES
-        self.site_list = cta.mouse_surgery.INJECTION_SITES
+        self.virus_list = surgery.INJECTION_VIRUSES
+        self.site_list = surgery.INJECTION_SITES
         self.virus_var.set(list(self.virus_list.keys())[0])
         self.site_var.set(list(self.site_list.keys())[0])
-        select_virus = ttk.OptionMenu(line,self.virus_var,*list(self.virus_list.keys()))
-        select_site = ttk.OptionMenu(line,self.site_var,*list(self.site_list.keys()))
+        select_virus = ttk.OptionMenu(line,self.virus_var,self.virus_var.get(),*list(self.virus_list.keys()))
+        select_site = ttk.OptionMenu(line,self.site_var,self.site_var.get(),*list(self.site_list.keys()))
         self.new_injection_button = ttk.Button(line,text='Add Injection',command=self.add_injection)
         self.delete_inection_button = ttk.Button(line,text='Delete Injection',command=self.delete_injection)
 
@@ -245,7 +246,7 @@ class surgery_segment(ttk.Frame):
             else:
                 tmp = var.get()
             self.data[name] = tmp
-        except ttk.TclError:
+        except tk.TclError:
             self.data[name] = None
             var.set('')
         self.master.saved=False

@@ -28,7 +28,7 @@ class mouse_surgery(dict):
     INJECTION_VIRUSES = {'AAV-Cre':'AAV5-CamKII-Cre-GFP','AAV-GFP':'AAV5-CamKII-GFP'}
 
     def __init__(self,surgery_type='blank',date=None,num_ch=None,pre_weight=None,
-            post_weight=None,injections=None,comments=None,**kwargs):
+            post_weight=None,injections=[],comments=None,**kwargs):
         if isinstance(date,str):
             date = get_datetime_from_str(date)
         tmp = {'Date':date,
