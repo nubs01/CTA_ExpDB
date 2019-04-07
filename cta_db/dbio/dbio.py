@@ -27,20 +27,21 @@ def add_animal_to_db(animID,animFile):
 
 def delete_animal_from_db(animID):
     anim_db = load_anim_db()
-    node = OS
-    if anim_db.get(node) is None:
+    if anim_db.get(OS) is None:
         raise ValueError('Database entries not found for '+OS)
     else:
-        if anim_db[node].get(animID) is not None:
-            anim_db[node].pop(animID)
+        if anim_db[OS].get(animID) is not None:
+            anim_db[OS].pop(animID)
             save_anim_db(anim_db)
         else:
             warning.warn('Could not delete %s. Animal not found in local database' % animID)
 
 def load_anim_data(animID):
     anim_db = load_anim_db()
-    node = OS
-    anim_path = anim_db[node].get(animID)
+    if anim_db.get(OS) is None:
+        anim_db[OS] = {}
+        save_anim_db(anim_db)
+    anim_path = anim_db[OS].get(animID)
     if anim_path == None:
         return None
     with open(anim_path,'rb') as f:

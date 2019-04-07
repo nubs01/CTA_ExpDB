@@ -14,8 +14,6 @@ def get_datetime_from_str(date_str):
                 break
         except ValueError:
             out = None
-    if out==None:
-        raise ValueError('Invalid date string format')
     return out
 
 def get_date_str(date,fmt='%m/%d/%y'):
