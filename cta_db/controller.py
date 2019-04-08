@@ -29,7 +29,7 @@ class controller(ttk.Frame):
         self.nb.add(self.anim_pane,text='Animal Info')
 
         # Pre-op Pane
-        self.pre_pane = gui.pre_op_pane(self.nb,self)
+        self.pre_pane = gui.pre_op_pane(self.nb,self,width=300)
         self.nb.add(self.pre_pane,text='Pre-Op')
 
         # Surgery Pane
@@ -77,6 +77,7 @@ class controller(ttk.Frame):
         self.anim_dat = dbio.load_anim_data(animID)
         self.surgery_pane.set_data(self.anim_dat.surgery)
         self.anim_pane.set_data(self.anim_dat)
+        self.pre_pane.set_data(self.anim_dat.pre_op)
         self.saved = True
 
 if __name__=="__main__":
