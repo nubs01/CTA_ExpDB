@@ -228,7 +228,6 @@ class surgery_segment(ttk.Frame):
         for x in children:
             self.injection_tree.item(x,text=str(n))
             n+=1
-        print(item)
 
     def add_injection(self):
         self.data.add_injection(self.virus_var.get(),self.site_var.get())

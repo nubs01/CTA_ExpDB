@@ -53,6 +53,13 @@ class controller(ttk.Frame):
     def delete_animal(self):
         print('Delete Animal')
 
+    def add_pre_op(self,date,event,comment):
+        self.anim_dat.add_pre_op(event,comment,date=date)
+        return self.anim_dat.pre_op
+
+    def set_pre_op(self,preop):
+        self.anim_dat.set_pre_op(preop)
+
     def anim_select(self,event):
         w = event.widget
         selection = w.curselection()

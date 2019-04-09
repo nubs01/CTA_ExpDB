@@ -13,12 +13,16 @@ class pre_op_pane(ttk.Frame):
         ttk.Frame.__init__(self,parent,*args,**kwargs)
         self.parent = parent
         self.master = master
-
-        self.initUI()
+        if self.data is not None:
+            self.initUI()
+        else:
+            self.pane = ttk.Frame(self)
+            self.pane.pack()
 
     def initUI(self):
-
-
+        self.pane = ttk.Frame(self)
+        self.pane.pack(side='left',anchor='nw',fill='both',expand=True)
+        
         # Make Variables
         self.date_var = tk.StringVar()
         self.date_var.set('mm/dd/yy HH:MM')
@@ -28,55 +32,102 @@ class pre_op_pane(ttk.Frame):
         self.comment_var.set('')
 
         # Make Labels
-        event_label = ttk.Label(self,text='Event')
-        date_label = ttk.Label(self,text='Date')
-        comment_label = ttk.Label(self,text='Comments')
+        event_label = ttk.Label(self.pane,text='Event')
+        date_label = ttk.Label(self.pane,text='Date')
+        comment_label = ttk.Label(self.pane,text='Comments')
 
         # Make Buttons
-        add_button = ttk.Button(self,text='Add',command=self.add_preop)
-        delete_button = ttk.Button(self,text='Delete',command=self.delete_preop)
+        add_button = ttk.Button(self.pane,text='Add',command=self.add_preop)
+        delete_button = ttk.Button(self.pane,text='Delete',command=self.delete_preop)
 
         # Make entries
-        date_entry = tkw.date_entry(self,textvariable=self.date_var,
+        self.date_entry = tkw.date_entry(self.pane,textvariable=self.date_var,
                                     nullstr='mm/dd/yy HH:MM',
                                     accepted_formats=['%m/%d/%y %H:%M'],
                                     outfmt='%m/%d/%y %H:%M')
-        event_entry = ttk.Entry(self,textvariable=self.event_var)
-        comment_entry = ttk.Entry(self,textvariable=self.comment_var)
+        event_entry = ttk.Entry(self.pane,textvariable=self.event_var)
+        comment_entry = ttk.Entry(self.pane,textvariable=self.comment_var)
 
         # Make Tree
-        self.tree = ttk.Treeview(self,height=5)
-        sbar = ttk.Scrollbar(self,orient='vertical',command=self.tree.yview)
-        self.tree.config(yscrollcommand=sbar.set)
-        self.tree['columns'] = ('Date','Event','Comments')
-        self.tree.column('#0',anchor='center',width=50)
-        self.tree.heading('#0',text='Idx')
-        self.tree.column('Date',anchor='center')
-        self.tree.heading('Date',text='Date')
-        self.tree.column('Event',anchor='center',width=50)
-        self.tree.heading('Event',text='Event')
-        self.tree.column('Comments',anchor='center',width=50)
-        self.tree.heading('Comments',text='Comments')
+        self.make_tree()
 
-        self.set_data()
+        date_label.grid(row=0,column=0,sticky='w')
+        self.date_entry.grid(row=0,column=1)
+        event_label.grid(row=0,column=4,sticky='w')
+        event_entry.grid(row=0,column=5)
+        comment_label.grid(row=1,column=0,sticky='w')
+        comment_entry.grid(row=1,column=1,columnspan=3,sticky='ew')
+        add_button.grid(row=1,column=5,sticky='e')
+        delete_button.grid(row=5,column=5,sticky='e')
+        self.pane.grid_columnconfigure(2,weight=1,pad=15)
+        self.pane.grid_rowconfigure(0,pad=5)
+        self.pane.grid_rowconfigure(1,pad=5)
+        self.pane.grid_rowconfigure(2,pad=5)
+        self.pane.grid_rowconfigure(3,pad=5)
+        self.pane.grid_rowconfigure(4,pad=5)
+        self.pane.grid_rowconfigure(5,pad=5)
 
     def add_preop(self):
-        pass
+        date = get_datetime_from_str(self.date_var.get())
+        event = self.event_var.get()
+        comment = self.comment_var.get()
+        if date is None or event=='':
+            return
+        self.data = self.master.add_pre_op(date,event,comment)
+        self.make_tree()
+        self.date_entry.set('')
+        self.event_var.set('')
+        self.comment_var.set('')
 
     def delete_preop(self):
-        pass
-
-    def set_data(self,data=None):
-        if data is not None:
-            self.data=data
-        else:
-            data = self.data
-
-        if data is None:
+        self.master.saved = False
+        try:
+            item = self.tree.selection()[0]
+        except IndexError:
             return
 
+        date_str = self.tree.item(item,'values')[0]
+        index = get_datetime_from_str(date_str)
+        self.data = self.data.drop(index)
+        self.tree.delete(item)
+        children = self.tree.get_children()
+        n=0
+        for x in children:
+            self.tree.item(x,text=str(n))
+            n+=1
+        self.master.set_pre_op(self.data)
+
+    def set_data(self,data):
+        self.pane.destroy()
+        self.data = data
+        if data is not None:
+            self.initUI()
+
+    def make_tree(self):
+        if hasattr(self,'tree_frame'):
+            self.tree_frame.destroy()
+
+        tree_frame = ttk.Frame(self.pane)
+        self.tree = ttk.Treeview(tree_frame,height=5,column=['Date','Event','Comments'])
+        sbar = ttk.Scrollbar(tree_frame,orient='vertical',command=self.tree.yview)
+        self.tree.config(yscrollcommand=sbar.set)
+        self.tree.column('#0',anchor='center',width=40)
+        self.tree.heading('#0',text='Idx')
+        self.tree.column('Date',anchor='center',width=170)
+        self.tree.heading('Date',text='Date')
+        self.tree.column('Event',anchor='center',width=170)
+        self.tree.heading('Event',text='Event')
+        self.tree.column('Comments',anchor='center',width=180)
+        self.tree.heading('Comments',text='Comments')
+        self.tree.grid(row=0,column=0,columnspan=4,rowspan=3,sticky='ew')
+        sbar.grid(row=0,column=5,rowspan=3,sticky='ns')
+        tree_frame.grid(row=2,column=0,rowspan=3,columnspan=6,sticky='ew')
+
+        data = self.data
         x = 0
         for row in data.iterrows():
-            tmp_id = self.tree.insert('','end',text=str(x))
-            self.tree.set(tmp_id,values=(get_date_str(row[0]),row[1],row[2]))
+            tmp_id = self.tree.insert('','end',text=str(x),
+                                    values=[get_date_str(row[0],fmt='%m/%d/%y %H:%M'),
+                                            row[1]['Pre-op'],row[1]['Comments']])
+            x+=1
 
