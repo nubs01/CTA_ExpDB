@@ -6,30 +6,36 @@ from .data_print import *
 
 class ioc_test(dict):
 
-    taste_defaults = {'habituation':{'Tastant':['Water'],'Port':[31],'Intan Channel':[24],
+    taste_defaults = {'habituation':{'Tastant':['Water'],'Port':[31],
                                     'Release Time (ms)':[8],'Volume per Trial':[20],
                                     'Num Trials':[45],
                                     'Total Volume':[x*y for x,y in zip([20],[45])]},
                     'array':{'Tastant':['Water','Quinine','NaCl','Citric Acid'],
-                            'Port':[31,33,35,37],'Intan Channel':[24,26,19,21],
+                            'Port':[31,33,35,37],
                             'Release Time (ms)':[8,9,9,7],'Volume per Trial':[20,20,20,20],
                             'Num Trials':[15,15,15,15],
                             'Total Volume':[x*y for x,y in zip([20,20,20,20],[15,15,15,15])]},
-                     'cta_train':{'Tastant':['Saccharin'],'Port':[31],'Intan Channel':[24],
+                     'cta_train':{'Tastant':['Saccharin'],'Port':[31],
                                 'Release Time (ms)':[8],'Volume per Trial':[20],
                                 'Num Trials':[45],
                                 'Total Volume':[x*y for x,y in zip([20],[45])]},
-                     'cta_test':{'Tastant':['Saccharin'],'Port':[31],'Intan Channel':[24],
+                     'cta_test':{'Tastant':['Saccharin'],'Port':[31],
                                 'Release Time (ms)':[8],'Volume per Trial':[20],
                                 'Num Trials':[15],
                                 'Total Volume':[x*y for x,y in zip([20],[15])]}}
 
     rec_defaults = {'none':{'Num Channels':None,'Sampling Rate (Hz)':None,
                             'High-Pass Filter (Hz)':None,'Notch Filter (Hz)':None,
-                            'Digital Inputs':[]}, #TODO: Correct this
+                            'Digital Inputs':[],'Intan Channels':[]}, 
                     'array':{'Num Channels':32,'Sampling Rate (Hz)':30000,
                             'High-Pass Filter (Hz)':250,'Notch Filter (Hz)':60,
-                            'Digital Inputs':[1,2,3,4]}} #TODO: Correct this
+                            'Digital Inputs':[0,1,2,3],'Intan Channels':[24,26,19,21]},
+                    'single':{'Num Channels':32,'Sampling Rate (Hz)':30000,
+                            'High-Pass Filter (Hz)':250,'Notch Filter (Hz)':60,
+                            'Digital Inputs':[0],'Intan Channels':[24]}} 
+
+    port_map = {31:{'DIN':0,'Intan Channel':24},33:{'DIN':1,'Intan Channel':26},
+                35:{'DIN':2,'Intan Channel':19},37:{'DIN':3,'Intan Channel':21}}
 
     injection_defaults = {'CTA':{'Injection Time':None,'Injection Type':'LiCl',
                                 'Concentration (M)':0.15,'Volume (ml)':None,
@@ -50,7 +56,7 @@ class ioc_test(dict):
     CTA_TRAIN = {'Test Type':'CTA Training','Test Time':None,
                 'Weight':None,'Taste Info':taste_defaults['cta_train'],
                 'Total Volume Consumed':sum(taste_defaults['cta_train']['Total Volume']),
-                'Rec Basename':None,'Rec Settings':rec_defaults['array'],
+                'Rec Basename':None,'Rec Settings':rec_defaults['single'],
                 'Injection':injection_defaults['CTA'],'Comments':None}
 
     TASTE_ARRAY = {'Test Type':'Taste Array','Test Time':None,
@@ -62,11 +68,11 @@ class ioc_test(dict):
     CTA_TEST = {'Test Type':'CTA Test','Test Time':None,
                 'Weight':None,'Taste Info':taste_defaults['cta_test'],
                 'Total Volume Consumed':sum(taste_defaults['cta_test']['Total Volume']),
-                'Rec Basename':None,'Rec Settings':rec_defaults['array'],
+                'Rec Basename':None,'Rec Settings':rec_defaults['single'],
                 'Injection':injection_defaults['None'],'Comments':None}
 
-    DEFAULT_MAP = {'habituation':HABITUATION,'train':CTA_TRAIN,'test':CTA_TEST,
-                    'array':TASTE_ARRAY}
+    DEFAULT_MAP = {'Habituation':HABITUATION,'CTA Train':CTA_TRAIN,'CTA Test':CTA_TEST,
+                    'Taste Array':TASTE_ARRAY}
 
     def __init__(self,test_data=None):
         if isinstance(test_data,str):

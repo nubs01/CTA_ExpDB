@@ -19,7 +19,6 @@ class surgery_pane(ttk.Frame):
 
     def initUI(self):
         self.surgery_segments = []
-        self.scrollpane = tkw.scroll_frame(self)
         
         # Button and droplist for new surgeries
         self.template_var = tk.StringVar(self)
@@ -36,6 +35,8 @@ class surgery_pane(ttk.Frame):
 
 
         # Add surgery frames to canvas
+        self.scrollpane = tkw.scroll_frame(self)
+        self.scrollpane.pack(side='top',fill='both',expand=True)
         n = 0
         for s in self.surgery_data:
             tmp = surgery_segment(self.scrollpane.viewport,self.master,data=s,index=n)
@@ -241,7 +242,7 @@ class surgery_segment(ttk.Frame):
     def set_var(self,name,var):
         try:
             if name=='Date':
-                tmp = dt.datetime.strptime(var.get(),'%m/%d/%y')
+                tmp = get_datetime_from_str(var.get())
             else:
                 tmp = var.get()
             self.data[name] = tmp
