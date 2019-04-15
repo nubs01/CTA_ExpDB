@@ -75,12 +75,12 @@ class anim_info_pane(ttk.Frame):
         water_dep_label.grid(row=4,column=0,sticky='w')
         perfusion_label.grid(row=5,column=0,sticky='w')
 
-        proto_entry.grid(row=0,column=1)
-        dob_entry.grid(row=1,column=1)
-        gender_option.grid(row=2,column=1)
-        geno_option.grid(row=3,column=1)
-        water_entry.grid(row=4,column=1)
-        perfusion_entry.grid(row=5,column=1)
+        proto_entry.grid(row=0,column=1,sticky='w')
+        dob_entry.grid(row=1,column=1,sticky='w')
+        gender_option.grid(row=2,column=1,sticky='w')
+        geno_option.grid(row=3,column=1,sticky='w')
+        water_entry.grid(row=4,column=1,sticky='w')
+        perfusion_entry.grid(row=5,column=1,sticky='w')
 
     def set_var(self,name,var,out_type='string'):
         if self.data is None:

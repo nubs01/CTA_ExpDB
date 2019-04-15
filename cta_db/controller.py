@@ -36,6 +36,10 @@ class controller(ttk.Frame):
         self.surgery_pane = gui.surgery_pane(self.nb,self,width=300,height=200)
         self.nb.add(self.surgery_pane,text='Surgery')
 
+        # IOC Test Pane
+        self.ioc_test_pane = gui.ioc_test_pane(self.nb,self,width=100,height=200)
+        self.nb.add(self.ioc_test_pane,text='IOC Tests')
+
         self.nb.select(self.anim_pane)
         self.nb.enable_traversal
         self.nb.pack(side='right',fill='both',expand=True)
@@ -85,12 +89,13 @@ class controller(ttk.Frame):
         self.surgery_pane.set_data(self.anim_dat.surgery)
         self.anim_pane.set_data(self.anim_dat)
         self.pre_pane.set_data(self.anim_dat.pre_op)
+        self.ioc_test_pane.set_data(self.anim_dat.ioc_tests)
         self.saved = True
 
 if __name__=="__main__":
     root = tk.Tk()
     root.style = ttk.Style()
     root.style.theme_use('clam')
-    root.geometry('800x400')
+    root.geometry('900x600')
     controller(root).pack(side='right',fill='both',expand=True)
     root.mainloop()

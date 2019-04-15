@@ -32,9 +32,9 @@ class pre_op_pane(ttk.Frame):
         self.comment_var.set('')
 
         # Make Labels
-        event_label = ttk.Label(self.pane,text='Event')
-        date_label = ttk.Label(self.pane,text='Date')
-        comment_label = ttk.Label(self.pane,text='Comments')
+        event_label = ttk.Label(self.pane,text='Event:  ')
+        date_label = ttk.Label(self.pane,text='Date:  ')
+        comment_label = ttk.Label(self.pane,text='Comments:  ')
 
         # Make Buttons
         add_button = ttk.Button(self.pane,text='Add',command=self.add_preop)
@@ -52,20 +52,19 @@ class pre_op_pane(ttk.Frame):
         self.make_tree()
 
         date_label.grid(row=0,column=0,sticky='w')
-        self.date_entry.grid(row=0,column=1)
-        event_label.grid(row=0,column=4,sticky='w')
-        event_entry.grid(row=0,column=5)
+        self.date_entry.grid(row=0,column=1,sticky='w')
+        event_label.grid(row=0,column=3,sticky='e')
+        event_entry.grid(row=0,column=4)
         comment_label.grid(row=1,column=0,sticky='w')
         comment_entry.grid(row=1,column=1,columnspan=3,sticky='ew')
-        add_button.grid(row=1,column=5,sticky='e')
-        delete_button.grid(row=5,column=5,sticky='e')
+        add_button.grid(row=1,column=4,sticky='e')
+        delete_button.grid(row=5,column=4,sticky='e')
         self.pane.grid_columnconfigure(2,weight=1,pad=15)
         self.pane.grid_rowconfigure(0,pad=5)
         self.pane.grid_rowconfigure(1,pad=5)
         self.pane.grid_rowconfigure(2,pad=5)
         self.pane.grid_rowconfigure(3,pad=5)
         self.pane.grid_rowconfigure(4,pad=5)
-        self.pane.grid_rowconfigure(5,pad=5)
 
     def add_preop(self):
         date = get_datetime_from_str(self.date_var.get())
@@ -114,13 +113,13 @@ class pre_op_pane(ttk.Frame):
         self.tree.column('#0',anchor='center',width=40)
         self.tree.heading('#0',text='Idx')
         self.tree.column('Date',anchor='center',width=170)
-        self.tree.heading('Date',text='Date')
+        self.tree.heading('Date',text='Date/Time')
         self.tree.column('Event',anchor='center',width=170)
         self.tree.heading('Event',text='Event')
         self.tree.column('Comments',anchor='center',width=180)
         self.tree.heading('Comments',text='Comments')
-        self.tree.grid(row=0,column=0,columnspan=4,rowspan=3,sticky='ew')
-        sbar.grid(row=0,column=5,rowspan=3,sticky='ns')
+        self.tree.grid(row=0,column=0,columnspan=5,rowspan=3,sticky='ew')
+        sbar.grid(row=0,column=6,rowspan=3,sticky='ns')
         tree_frame.grid(row=2,column=0,rowspan=3,columnspan=6,sticky='ew')
 
         data = self.data

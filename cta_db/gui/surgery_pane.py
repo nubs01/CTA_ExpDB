@@ -31,20 +31,20 @@ class surgery_pane(ttk.Frame):
                                     command=self.new_surgery)
         self.add_button.pack(side='left',padx=1,pady=1)
         self.button_frame.pack(side='top',fill='x',padx=1,pady=1)
-        ttk.Separator(self,orient='horizontal').pack(side='top',fill='x')
+        ttk.Separator(self,orient='horizontal').pack(side='top',fill='x',pady=5)
 
 
         # Add surgery frames to canvas
         self.scrollpane = tkw.scroll_frame(self)
-        self.scrollpane.pack(side='top',fill='both',expand=True)
+        self.scrollpane.pack(side='bottom',fill='both',padx=10,
+                            pady=10,expand=True)
         n = 0
         for s in self.surgery_data:
             tmp = surgery_segment(self.scrollpane.viewport,self.master,data=s,index=n)
-            tmp.bind("<Button-4>",self.scrollpane._on_mousewheel)
-            tmp.bind("<Button-5>",self.scrollpane._on_mousewheel)
             self.surgery_segments.append(tmp)
             tmp.pack(side='top',fill='x')
             n+=1
+        self.scrollpane.bind_children_to_mouse()
 
         # Scroll test filling
         #for x in range(30):
@@ -61,11 +61,10 @@ class surgery_pane(ttk.Frame):
         n = 0
         for s in self.surgery_data:
             tmp = surgery_segment(self.scrollpane.viewport,self.master,data=s,index=n)
-            tmp.bind("<Button-4>",self.scrollpane._on_mousewheel)
-            tmp.bind("<Button-5>",self.scrollpane._on_mousewheel)
             self.surgery_segments.append(tmp)
             tmp.pack(side='top',fill='x')
             n+=1
+        self.scrollpane.bind_children_to_mouse()
 
 
     def new_surgery(self):
@@ -75,6 +74,7 @@ class surgery_pane(ttk.Frame):
         self.surgery_segments.append(tmp_frame)
         tmp_frame.pack(side='top',fill='x')
         self.master.saved=False
+        self.scrollpane.bind_children_to_mouse()
 
     def delete_surgery(self,index):
         self.surgery_data.pop(index)
@@ -87,7 +87,7 @@ class surgery_pane(ttk.Frame):
 
 # segments for each surgery
 # Has lock function to prevent changes when checked
-class surgery_segment(ttk.Frame):
+class surgery_segment(ttk.Labelframe):
     def __init__(self,parent,master,*args,**kwargs):
         self.data = kwargs.pop('data')
         self.index = kwargs.pop('index')
@@ -97,9 +97,7 @@ class surgery_segment(ttk.Frame):
         self.initUI()
 
     def initUI(self):
-        line = ttk.Frame(self,relief='sunken')
-        line.bind("<Button-4>",self.parent.parent._on_mousewheel)
-        line.bind("<Button-5>",self.parent.parent._on_mousewheel)
+        line = ttk.Frame(self)
 
         # Make Date field
         date_label = ttk.Label(line,text='Date:  ')
@@ -128,7 +126,7 @@ class surgery_segment(ttk.Frame):
         self.preop_var.trace('w',lambda n,s,x: self.set_var('Pre-op Weight',self.preop_var))
         preop_entry = ttk.Entry(line,textvariable=self.preop_var,width=10)
         preop_label.grid(row=2,column=0,sticky='e')
-        preop_entry.grid(row=2,column=1)
+        preop_entry.grid(row=2,column=1,sticky='w')
 
         # Post-op weight Field
         postop_label = ttk.Label(line,text='Post-op Weight:  ')
@@ -137,7 +135,7 @@ class surgery_segment(ttk.Frame):
         self.postop_var.trace('w',lambda n,s,x: self.set_var('Post-op Weight',self.postop_var))
         postop_entry = ttk.Entry(line,textvariable=self.postop_var,width=10)
         postop_label.grid(row=3,column=0,sticky='e')
-        postop_entry.grid(row=3,column=1)
+        postop_entry.grid(row=3,column=1,sticky='w')
 
         # Implant Channels Field
         imp_ch_label = ttk.Label(line,text='Num channels')
@@ -206,7 +204,7 @@ class surgery_segment(ttk.Frame):
                 command=lambda: self.parent.parent.parent.delete_surgery(self.index)).grid(row=0,column=7,rowspan=2,sticky='ne')
         line.grid_columnconfigure(6,weight=1)
         line.pack(side='top',fill='both',expand=True)
-        ttk.Separator(self,orient='horizontal').pack(side='bottom',fill='x')
+        ttk.Separator(self,orient='horizontal').pack(side='bottom',fill='x',pady=5)
         col_count, row_count = line.grid_size()
         for row in range(row_count):
                 line.grid_rowconfigure(row, minsize=20)
