@@ -7,6 +7,7 @@ class controller(ttk.Frame):
     def __init__(self,parent,*args,**kwargs):
         tk.Frame.__init__(self,parent,*args,**kwargs)
         self.parent = parent
+        self.root = parent
         self.anim_db = dbio.load_anim_db()
         self.anim_index=0
         self.saved = True
@@ -18,7 +19,7 @@ class controller(ttk.Frame):
         self.pack(fill='both',expand=True)
 
         # add list box frame
-        self.list_pane = gui.animal_list_pane(self,root)
+        self.list_pane = gui.animal_list_pane(self,self.root)
         self.list_pane.pack(side='left',fill='y')
 
         # Notebook for panes
@@ -41,7 +42,7 @@ class controller(ttk.Frame):
         self.nb.add(self.ioc_test_pane,text='IOC Tests')
 
         self.nb.select(self.anim_pane)
-        self.nb.enable_traversal
+        self.nb.enable_traversal()
         self.nb.pack(side='right',fill='both',expand=True)
 
     def close(self):
@@ -56,6 +57,31 @@ class controller(ttk.Frame):
 
     def delete_animal(self):
         print('Delete Animal')
+
+    def disable(self):
+        '''
+        Disable all children to prevent clicking on things
+        '''
+        # disable other notebook tabs
+        tab_id = self.nb.index(self.nb.select())
+        curFrame = self.nb.winfo_children()[tab_id]
+        for t in self.nb.tabs():
+            if self.nb.index(t) is not tab_id:
+                self.nb.tab(t,state='disable')
+
+        self.list_pane.cstate('disabled')
+
+    def enable(self):
+        '''
+        Enable all children to allow clicking on things
+        '''
+        # disable other notebook tabs
+        tab_id = self.nb.index(self.nb.select())
+        curFrame = self.nb.winfo_children()[tab_id]
+        for t in self.nb.tabs():
+            self.nb.tab(t,state='normal')
+
+        self.list_pane.cstate('normal')
 
     def add_pre_op(self,date,event,comment):
         self.anim_dat.add_pre_op(event,comment,date=date)

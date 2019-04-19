@@ -52,3 +52,11 @@ class animal_list_pane(ttk.Frame):
         # add animals to list
         for anim in self.animal_list:
             self.list_box.insert('end',anim)
+
+
+    def cstate(self,state):
+        buttons = self.button_frame.winfo_children()
+        for b in buttons:
+            b.configure(state=state)
+        self.list_box.configure(state=state)
+

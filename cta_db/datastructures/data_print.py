@@ -5,7 +5,7 @@ import re
 
 # check datetime string format and convert to datetime
 def get_datetime_from_str(date_str):
-    accepted_formats = ['%m/%d/%y','%m/%d/%y %H:%M','%m%d%y %H:%M']
+    accepted_formats = ['%m/%d/%y','%m/%d/%y %H:%M','%m%d%y %H:%M','%H:%M']
     out = None
     for fmt in accepted_formats:
         try:
@@ -18,7 +18,7 @@ def get_datetime_from_str(date_str):
 
 def get_date_str(date,fmt='%m/%d/%y'):
     null_convert = {'%m':'mm','%d':'dd','%y':'yy','%H':'HH','%M':'MM'}
-    if date==None:
+    if date is None or date is '':
         out = fmt
         for k,v in null_convert.items():
             out = out.replace(k,v)

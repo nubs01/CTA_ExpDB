@@ -36,10 +36,9 @@ class ioc_test_pane(ttk.Frame):
             return
 
         for ioc in self.data:
-            tmp = ioc_test_segment(self.pane.viewport,ioc,n)
+            tmp = ioc_test_segment(self.pane.viewport,self,ioc,n)
             self.test_segments.append(tmp)
             tmp.pack(side='top',fill='x')
-            ttk.Separator(self.pane.viewport,orient='horizontal').pack(side='top',fill='x',pady=5)
             n+=1
 
         self.pane.bind_children_to_mouse()
@@ -57,16 +56,40 @@ class ioc_test_pane(ttk.Frame):
         self.pane.bind_children_to_mouse()
 
     def add_test(self):
-        pass
+        test_type = self.new_type_var.get()
+        new_test = ioc_test(test_type)
+        self.data.append(new_test)
+        tmp = ioc_test_segment(self.pane.viewport,self,new_test,len(self.test_segments))
+        self.test_segments.append(tmp)
+        tmp.pack(side='top',fill='x')
+        self.pane.bind_children_to_mouse()
 
     def drop_test(self,index):
-        pass
+        self.data.pop(index)
+        self.test_segments.pop(index).destroy()
+        for tmp in self.test_segments[index:]:
+            tmp.index-=1
+
+    def enable(self,state='!disabled'):
+        def cstate(widget):
+            if widget.winfo_children:
+                for w in widget.winfo_children():
+                    try:
+                        w.state((state,))
+                    except AttributeError:
+                        pass
+                    cstate(w)
+        cstate(self)
+
+    def disable(self):
+        self.enable('disabled')
 
 class ioc_test_segment(ttk.Frame):
-    def __init__(self,parent,master,data,index):
+    def __init__(self,parent,top,data,index):
         ttk.Frame.__init__(self,parent)
-        self.parent = parent
-        self.master = master
+        self.parent = top
+        self.master = top.master
+        self.root = top.master.root
         self.index = index
         self.data = data
         self.initUI()
@@ -80,7 +103,8 @@ class ioc_test_segment(ttk.Frame):
         line3 = ttk.Frame(pane)
         line4 = ttk.Frame(pane)
 
-        del_pane_button = ttk.Button(line1,text='X',command=lambda:self.parent.drop_test(self.index),
+        del_pane_button = ttk.Button(line1,text='X',
+                                    command=lambda:self.parent.drop_test(self.index),
                                     width=3)
 
         # Labels
@@ -226,6 +250,24 @@ class ioc_test_segment(ttk.Frame):
         if not inj_var.get():
             self.inj_frame.pack_forget()
 
+    def set_injection_var(self,field,var):
+        try:
+            if field is 'Injection Time':
+                tmp_dt = dp.get_datetime_from_str(var.get())
+                if tmp_dt is None:
+                    tmp = None
+                else:
+                    time = tmp.time()
+                    date = self.data['Test Time'].date() if self.data['Test Time'] is not None else dt.datetime.now.date()
+                    tmp = dt.datetime.combine(date,time)
+            else:
+                tmp = var.get()
+            self.data['Injection'][field] = tmp
+        except tk.TclError:
+            self.data['Injection'][field] = None
+            var.set('')
+        self.master.saved = False
+
     def injection_check(self,var):
         if var:
             self.inj_frame.pack(side='bottom',fill='x',anchor='se',pady=5)
@@ -233,7 +275,7 @@ class ioc_test_segment(ttk.Frame):
             self.inj_frame.pack_forget()
 
     def fill_tree(self,frame=None):
-        if frame is not None or not hasattr(self,tree):
+        if frame is not None or not hasattr(self,'tree'):
             self.tree = ttk.Treeview(frame,height=6)
             sbar = ttk.Scrollbar(frame,orient='vertical',command=self.tree.yview)
             self.tree.configure(yscrollcommand=sbar.set)
@@ -258,6 +300,7 @@ class ioc_test_segment(ttk.Frame):
             sbar.pack(side='right',fill='y')
 
         dat = self.data['Taste Info']
+        self.tree.delete(*self.tree.get_children())
         for x in range(len(dat['Tastant'])):
             tmp_id = self.tree.insert('','end',text=str(x),
                                     values=[dat['Tastant'][x],dat['Port'][x],dat['Release Time (ms)'][x],
@@ -266,17 +309,32 @@ class ioc_test_segment(ttk.Frame):
 
         self.total_var.set(round(self.data['Total Volume Consumed'],2))
 
-    def set_test_type(self,*args):
-        pass
-
-    def set_var(self,name,var_type='string'):
-        pass
+    def set_var(self,name,var):
+        try:
+            if name=='Test Time':
+                tmp = dp.get_datetime_from_str(var.get())
+            else:
+                tmp = var.get()
+            self.data[name] = tmp
+        except tk.TclError:
+            self.data[name] = None
+            var.set('')
+        self.master.saved=False
 
     def calibrate(self):
-        pass
+        cal_dict = {'Release Times':self.data['Taste Info']['Release Time (ms)'],
+                    'Volume Per Trial':self.data['Taste Info']['Volume per Trial']}
+        popup = tkw.fill_dict_popup(self.root,cal_dict)
+        self.master.disable()
+        self.parent.disable()
+        self.root.wait_window(popup.top)
+        self.master.enable()
+        self.parent.enable()
 
-    def set_data_variables(self):
-        pass
+        times = [float(x) for x in cal_dict['Release Times']]
+        vols = [float(x) for x in cal_dict['Volume Per Trial']]
+        self.data.calibration(times,vols)
+        self.fill_tree()
 
     def add_taste(self):
         pass
@@ -285,7 +343,12 @@ class ioc_test_segment(ttk.Frame):
         pass
 
     def edit_rec_settings(self):
-        pass
+        popup = tkw.fill_dict_popup(self.root,self.data['Rec Settings'])
+        self.master.disable()
+        self.parent.disable()
+        self.root.wait_window(popup.top)
+        self.master.enable()
+        self.parent.enable()
 
 class calibrate_popup(object):
     pass

@@ -1,0 +1,7 @@
+- Add ananlysis info to animal structure
+- add data folder path to animal struct
+    - relative to data dir
+- add data_dir as key to cta_db
+- Make analysis tab 
+- Make analysis scripts to run analysis steps from db gui
+
