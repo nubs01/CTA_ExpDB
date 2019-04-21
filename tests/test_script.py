@@ -15,20 +15,20 @@ a1.add_pre_op('Box Habituation','He hates it','3/12/19 14:00')
 s1 = cta.mouse_surgery('BLA_cre_implant',pre_weight=34.2,post_weight=36,date='3/13/19',num_ch=31)
 a1.add_surgery(s1)
 
-i1 = cta.ioc_test('habituation')
+i1 = cta.ioc_test('Habituation')
 i1.set_test_time('3/22/19 13:30')
 i1['Weight'] = 33.2
 i1.calibration([8],[18.8])
 a1.add_ioc_test(i1)
 
-i2 = cta.ioc_test('array')
+i2 = cta.ioc_test('Taste Array')
 i2.set_test_time('3/23/19 13:30')
 i2['Weight'] = 31.4
 i2.calibration([8,9,9,7],[18.4,19.6,20,18.8])
 i2.set_rec_info('RN5_4taste_preCTA_190323',cta.ioc_test.rec_defaults['array'])
 a1.add_ioc_test(i2)
 
-i3 = cta.ioc_test('train')
+i3 = cta.ioc_test('CTA Train')
 i3.set_test_time('3/24/19 13:00')
 i3['Weight'] = 31.3
 i3.calibration([8],[19.1])
@@ -42,7 +42,7 @@ i4.set_rec_info('RN5_4taste_postCTA_190325')
 i4.calibration([8,9,9,7],[18.4,19.8,19.6,18])
 a1.add_ioc_test(i4)
 
-i5 =  cta.ioc_test('test')
+i5 =  cta.ioc_test('CTA Test')
 i5.set_test_time('3/25/19 12:30')
 i5['Weight'] = 30.8
 i5.set_rec_info('RN5_SaccTest_190325')

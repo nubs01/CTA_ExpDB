@@ -78,7 +78,7 @@ class ioc_test(dict):
         if isinstance(test_data,str):
             test_data = ioc_test.DEFAULT_MAP.get(test_data)
             if test_data == None:
-                raise ValueError('Invalid default type. options are: ' + ioc_test.DEFAULT_MAP.keys())
+                raise ValueError('Invalid default type. options are: ' + ', '.join(ioc_test.DEFAULT_MAP.keys()))
         if test_data != None:
             super().__init__(**test_data)
         else:

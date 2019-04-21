@@ -1,0 +1,11 @@
+For ioc pane:
+    - Add ioc test
+    - remove ioc text
+    - add taste
+    - remove taste
+    - calibrate
+    - add injection
+    - set all vars
+    - enable all
+    - disable all
+

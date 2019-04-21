@@ -76,7 +76,7 @@ class ioc_test_pane(ttk.Frame):
                 for w in widget.winfo_children():
                     try:
                         w.state((state,))
-                    except AttributeError:
+                    except:
                         pass
                     cstate(w)
         cstate(self)
@@ -325,22 +325,76 @@ class ioc_test_segment(ttk.Frame):
         cal_dict = {'Release Times':self.data['Taste Info']['Release Time (ms)'],
                     'Volume Per Trial':self.data['Taste Info']['Volume per Trial']}
         popup = tkw.fill_dict_popup(self.root,cal_dict)
-        self.master.disable()
-        self.parent.disable()
+        self.disable_all()
         self.root.wait_window(popup.top)
-        self.master.enable()
-        self.parent.enable()
+        self.enable_all()
 
         times = [float(x) for x in cal_dict['Release Times']]
         vols = [float(x) for x in cal_dict['Volume Per Trial']]
-        self.data.calibration(times,vols)
-        self.fill_tree()
+        nTaste = len(self.data['Taste Info']['Tastant'])
+        if len(times) is nTaste and len(vols) is nTaste:
+            self.data.calibration(times,vols)
+            self.fill_tree()
 
     def add_taste(self):
-        pass
+        n = len(self.data['Taste Info']['Tastant'])
+        taste_dict = {'Tastant':'','Port':'','Release Time (ms)':'',
+                        'Volume per Trial':'','Num Trials':''}
+        popup = tkw.fill_dict_popup(self.root,taste_dict)
+        self.disable_all()
+        self.root.wait_window(popup.top)
+        self.enable_all()
+
+        # data check
+        intVars = ['Port','Num Trials']
+        floatVars = ['Release Time (ms)','Volume per Trial']
+        valid = True
+        for k,v in taste_dict.items():
+            if v is '':
+                valid = False
+                tmp = ''
+            elif any([k == x for x in intVars]):
+                tmp = int(v)
+            elif any([k==x for x in floatVars]):
+                tmp = float(v)
+            else:
+                tmp = v
+            taste_dict[k] = tmp
+
+        print(taste_dict)
+        if valid:
+            [self.data['Taste Info'][k].append(taste_dict[k]) for k in taste_dict]
+            self.data.calibration(self.data['Taste Info']['Release Time (ms)'],
+                                    self.data['Taste Info']['Volume per Trial'])
+            self.fill_tree()
+            self.master.saved = False
+
+    def disable_all(self):
+        self.master.disable()
+        self.parent.disable()
+
+    def enable_all(self):
+        self.master.enable()
+        self.parent.enable()
 
     def delete_taste(self):
-        pass
+        self.master.saved = False
+        try:
+            item = self.tree.selection()[0]
+        except IndexError:
+            return
+
+        index = int(self.tree.item(item,'text'))
+        for k in self.data['Taste Info'].keys():
+            self.data['Taste Info'][k].pop(index)
+        self.tree.delete(item)
+        children = self.tree.get_children()
+        n=0
+        for x in children:
+            self.tree.item(x,text=str(n))
+            n+=1
+        self.data['Total Volume Consumed'] = sum(self.data['Taste Info']['Total Volume'])
+        self.total_var.set(self.data['Total Volume Consumed'])
 
     def edit_rec_settings(self):
         popup = tkw.fill_dict_popup(self.root,self.data['Rec Settings'])
