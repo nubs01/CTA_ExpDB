@@ -63,12 +63,14 @@ class ioc_test_pane(ttk.Frame):
         self.test_segments.append(tmp)
         tmp.pack(side='top',fill='x')
         self.pane.bind_children_to_mouse()
+        self.master.saved = False
 
     def drop_test(self,index):
         self.data.pop(index)
         self.test_segments.pop(index).destroy()
         for tmp in self.test_segments[index:]:
             tmp.index-=1
+        self.master.saved = False
 
     def enable(self,state='!disabled'):
         def cstate(widget):
@@ -334,6 +336,7 @@ class ioc_test_segment(ttk.Frame):
         nTaste = len(self.data['Taste Info']['Tastant'])
         if len(times) is nTaste and len(vols) is nTaste:
             self.data.calibration(times,vols)
+            self.master.saved = False
             self.fill_tree()
 
     def add_taste(self):
@@ -395,6 +398,7 @@ class ioc_test_segment(ttk.Frame):
             n+=1
         self.data['Total Volume Consumed'] = sum(self.data['Taste Info']['Total Volume'])
         self.total_var.set(self.data['Total Volume Consumed'])
+        self.master.saved = False
 
     def edit_rec_settings(self):
         popup = tkw.fill_dict_popup(self.root,self.data['Rec Settings'])
@@ -403,12 +407,4 @@ class ioc_test_segment(ttk.Frame):
         self.root.wait_window(popup.top)
         self.master.enable()
         self.parent.enable()
-
-class calibrate_popup(object):
-    pass
-
-class taste_popup(object):
-    pass
-
-class rec_popup(object):
-    pass
+        self.master.saved = False
