@@ -46,15 +46,11 @@ class surgery_pane(ttk.Frame):
             n+=1
         self.scrollpane.bind_children_to_mouse()
 
-        # Scroll test filling
-        #for x in range(30):
-        #    tmp = ttk.Button(self.scrollpane.viewport,text='Testing %i' % x)
-        #    tmp.pack(side='top',fill='x')
-        #    tmp.bind("<Button-4>",self.scrollpane._on_mousewheel)
-        #    tmp.bind("<Button-5>",self.scrollpane._on_mousewheel)
-
     def set_data(self,data):
-        self.surgery_data = data
+        if data is None:
+            self.surgery_data=[]
+        else:
+            self.surgery_data = data
         for s in self.surgery_segments:
             s.destroy()
         self.surgery_segments = []
@@ -65,7 +61,6 @@ class surgery_pane(ttk.Frame):
             tmp.pack(side='top',fill='x')
             n+=1
         self.scrollpane.bind_children_to_mouse()
-
 
     def new_surgery(self):
         tmp = surgery(self.template_var.get())

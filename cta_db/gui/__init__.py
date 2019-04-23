@@ -3,3 +3,4 @@ from .info_pane import *
 from .pre_op_pane import *
 from .animal_list_pane import *
 from .ioc_test_pane import *
+from .bottle_test_pane import *

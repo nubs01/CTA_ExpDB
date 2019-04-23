@@ -13,16 +13,14 @@ class pre_op_pane(ttk.Frame):
         ttk.Frame.__init__(self,parent,*args,**kwargs)
         self.parent = parent
         self.master = master
-        if self.data is not None:
-            self.initUI()
-        else:
-            self.pane = ttk.Frame(self)
-            self.pane.pack()
+        self.initUI()
 
     def initUI(self):
         self.pane = ttk.Frame(self)
         self.pane.pack(side='left',anchor='nw',fill='both',expand=True)
         
+        if self.data is None:
+            return
         # Make Variables
         self.date_var = tk.StringVar()
         self.date_var.set('mm/dd/yy HH:MM')
@@ -99,8 +97,7 @@ class pre_op_pane(ttk.Frame):
     def set_data(self,data):
         self.pane.destroy()
         self.data = data
-        if data is not None:
-            self.initUI()
+        self.initUI()
 
     def make_tree(self):
         if hasattr(self,'tree_frame'):

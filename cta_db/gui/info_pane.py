@@ -14,15 +14,13 @@ class anim_info_pane(ttk.Frame):
         self.master = master
         self.parent = parent
         self.pack(fill='both',anchor='nw',expand=True)
-        if self.data is not None:
-            self.initUI()
-        else:
-            self.pane = tk.Frame(self)
-            self.pane.pack()
+        self.initUI()
 
     def initUI(self):
         self.pane = tk.Frame(self)
         self.pane.pack(side='left',anchor='nw',pady=10)
+        if self.data is None:
+            return
 
         # Labels
         protocol_label = ttk.Label(self.pane,text='Protocol:  ')
@@ -117,8 +115,7 @@ class anim_info_pane(ttk.Frame):
     def set_data(self,data):
         self.pane.destroy()
         self.data = data
-        if data is not None:
-            self.initUI()
+        self.initUI()
 
     def set_data_vars(self):
         dat = self.data.anim_info

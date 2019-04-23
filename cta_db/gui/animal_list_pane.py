@@ -38,7 +38,7 @@ class animal_list_pane(ttk.Frame):
         self.add_button = ttk.Button(self.button_frame,text='+',
                                     command=parent.add_animal,width=3)
         self.del_button = ttk.Button(self.button_frame,text='-',width=3,
-                                    command=lambda: parent.delete_animal(self.animal_list[self.list_box.curselection()]))
+                                    command=parent.delete_animal)
         self.save_button = ttk.Button(self.button_frame,text='Save',
                                     command=parent.save,width=5)
         self.close_button = ttk.Button(self.button_frame,text='Close',
@@ -60,3 +60,17 @@ class animal_list_pane(ttk.Frame):
             b.configure(state=state)
         self.list_box.configure(state=state)
 
+    def add_animal(self,animID):
+        self.list_box.insert('end',animID)
+        idx = self.list_box.index('end')
+        self.list_box.selection_clear(0,'end')
+        self.list_box.selection_set('end')
+        self.list_box.selection_anchor(idx)
+        return idx
+
+    def re_anchor(self):
+        idx = int(self.list_box.curselection()[0])
+        self.list_box.selection_anchor(idx)
+
+    def remove_animal(self,idx):
+        self.list_box.delete(idx)

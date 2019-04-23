@@ -11,7 +11,6 @@ class ioc_test_pane(ttk.Frame):
         ttk.Frame.__init__(self,parent,*args,**kwargs)
         self.parent = parent
         self.master = master
-
         self.initUI()
 
     def initUI(self):
@@ -47,6 +46,8 @@ class ioc_test_pane(ttk.Frame):
         [x.destroy() for x in self.test_segments]
         self.data = data
         self.test_segments = []
+        if self.data is None:
+            return
         n=0
         for ioc in self.data:
             tmp = ioc_test_segment(self.pane.viewport,self,ioc,n)

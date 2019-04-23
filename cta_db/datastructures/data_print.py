@@ -4,9 +4,11 @@ from copy import deepcopy
 import re
 
 # check datetime string format and convert to datetime
-def get_datetime_from_str(date_str):
-    accepted_formats = ['%m/%d/%y','%m/%d/%y %H:%M','%m%d%y %H:%M','%H:%M']
+def get_datetime_from_str(date_str,accepted_formats = ['%m/%d/%y','%m/%d/%y %H:%M',
+                                                        '%m%d%y %H:%M','%H:%M']):
     out = None
+    if date_str is None:
+        return None
     for fmt in accepted_formats:
         try:
             out = dt.datetime.strptime(date_str,fmt)
