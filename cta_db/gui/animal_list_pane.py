@@ -14,7 +14,7 @@ class animal_list_pane(ttk.Frame):
             node = platform.node()
             if anim_db.get(node) is None:
                 anim_db[node] = {}
-                save_anim_db(anim_db)
+                dbio.save_anim_db(anim_db)
             self.animal_list = list(anim_db[node].keys())
             self.animal_list.sort()
         ttk.Frame.__init__(self,parent,width=20,*args,**kwargs)
