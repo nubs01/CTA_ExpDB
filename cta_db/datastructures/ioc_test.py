@@ -76,7 +76,7 @@ class ioc_test(dict):
 
     def __init__(self,test_data=None):
         if isinstance(test_data,str):
-            test_data = ioc_test.DEFAULT_MAP.get(test_data)
+            test_data = deepcopy(ioc_test.DEFAULT_MAP.get(test_data))
             if test_data == None:
                 raise ValueError('Invalid default type. options are: ' + ', '.join(ioc_test.DEFAULT_MAP.keys()))
         if test_data != None:

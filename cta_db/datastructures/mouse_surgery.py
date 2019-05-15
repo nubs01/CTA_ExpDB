@@ -23,7 +23,9 @@ class mouse_surgery(dict):
             'Working Implant Channels':32,'Injections':[],'Comments':None}
 
 
-    SURGERY_MAP = {'BLA_Cre_implant':CRE_IMPLANT,'BLA_GFP_implant':GFP_IMPLANT,'blank':BLANK}
+    SURGERY_MAP = {'BLA_Cre_implant':deepcopy(CRE_IMPLANT),
+                    'BLA_GFP_implant':deepcopy(GFP_IMPLANT),
+                    'blank':deepcopy(BLANK)}
     INJECTION_SITES = {'BLA':BLA,'RE':RE}
     INJECTION_VIRUSES = {'AAV-Cre':'AAV5-CamKII-Cre-GFP','AAV-GFP':'AAV5-CamKII-GFP'}
 
@@ -33,11 +35,11 @@ class mouse_surgery(dict):
             date = get_datetime_from_str(date)
         tmp = {'Date':date,
                 'Pre-op Weight':pre_weight,'Post-op Weight':post_weight,
-                'Working Implant Channels':num_ch,'Injections':injections,'Comments':comments}
+                'Working Implant Channels':num_ch,'Injections':deepcopy(injections),'Comments':comments}
 
         # if given a dict use the defaults and update with non-None values from dict
         if isinstance(surgery_type,dict):
-            tmp.update((k,v) for k,v in surgery_type.items() if v is not None)
+            tmp.update((k,deepcopy(v)) for k,v in surgery_type.items() if v is not None)
         elif isinstance(surgery_type,str):
             # if the string maps to a default use that default and update with function args
             tmp2 = mouse_surgery.SURGERY_MAP.get(surgery_type)
@@ -55,8 +57,8 @@ class mouse_surgery(dict):
         if isinstance(virus,dict):
             self['Injections'].append(injection)
         else:
-            tmp_virus = mouse_surgery.INJECTION_VIRUSES.get(virus)
-            tmp_coords = mouse_surgery.INJECTION_SITES.get(site)
+            tmp_virus = deepcopy(mouse_surgery.INJECTION_VIRUSES.get(virus))
+            tmp_coords = deepcopy(mouse_surgery.INJECTION_SITES.get(site))
             if tmp_virus == None:
                 tmp_virus = virus
             if tmp_coords is None:
