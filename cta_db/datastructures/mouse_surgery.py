@@ -8,25 +8,32 @@ class mouse_surgery(dict):
     BLA = pd.DataFrame([[-1.4,3.4,4.6,200],[-1.4,3.4,4.3,200],
                         [-1.4,-3.4,4.3,200],[-1.4,-3.4,4.6,200]],
                         columns=['AP','ML','DV','Volume'])
+
     RE = pd.DataFrame([[-.9,1.25,4.2,200],[-.9,1.25,4.0,200],
                         [-.9,-1.25,4.2,200],[-.9,-1.25,4,200]],
                         columns=['AP','ML','DV','Volume'])
+
     BLA_CRE = {'Virus':'AAV5-CamKII-Cre-GFP','Site':'BLA','Coords':BLA}
+
     BLA_GFP = {'Virus':'AAV5-CamKII-GFP','Site':'BLA','Coords':BLA}
+
     CRE_IMPLANT = {'Date':None,'Surgery Type':'BLA Virus Injection, Electrode & IOC Implant',
                     'Pre-op Weight':None,'Post-op Weight':None,
                     'Working Implant Channels':32,'Injections':[BLA_CRE],'Comments':None}
+
     GFP_IMPLANT = {'Date':None,'Surgery Type':'BLA Virus Injection, Electrode & IOC Implant',
                     'Pre-op Weight':None,'Post-op Weight':None,
                     'Working Implant Channels':32,'Injections':[BLA_GFP],'Comments':None}
+
     BLANK = {'Date':None,'Surgery Type':'','Pre-op Weight':None,'Post-op Weight':None,
             'Working Implant Channels':32,'Injections':[],'Comments':None}
-
 
     SURGERY_MAP = {'BLA_Cre_implant':deepcopy(CRE_IMPLANT),
                     'BLA_GFP_implant':deepcopy(GFP_IMPLANT),
                     'blank':deepcopy(BLANK)}
+
     INJECTION_SITES = {'BLA':BLA,'RE':RE}
+
     INJECTION_VIRUSES = {'AAV-Cre':'AAV5-CamKII-Cre-GFP','AAV-GFP':'AAV5-CamKII-GFP'}
 
     def __init__(self,surgery_type='blank',date=None,num_ch=None,pre_weight=None,
