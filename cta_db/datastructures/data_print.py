@@ -25,6 +25,8 @@ def get_date_str(date,fmt='%m/%d/%y'):
         for k,v in null_convert.items():
             out = out.replace(k,v)
         return out
+    if isinstance(date,str):
+        return date
     return date.strftime(fmt)
         
 
