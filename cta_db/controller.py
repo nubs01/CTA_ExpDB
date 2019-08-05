@@ -62,11 +62,12 @@ class controller(ttk.Frame):
             self.anim_file = os.path.join(file_dir,animID+'_metadata.p')
         dbio.save_anim_data(animID,self.anim_dat,self.anim_file)
         self.list_pane.re_anchor()
-        txt_file = sel.anim_file.replace('.p','.txt')
+        txt_file = self.anim_file.replace('.p','.txt')
         with open(txt_file, 'w') as f:
             print(self.anim_dat, file=f)
 
         self.saved=True
+        print('%s Saved' % animID)
 
     def disable(self):
         '''
