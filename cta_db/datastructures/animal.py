@@ -7,6 +7,10 @@ import matplotlib
 matplotlib.use('TkAgg')
 import seaborn as sns
 
+# Re work to have dict of dicts and dataframes, 
+# Have dataframe of weights for animals for each day,
+#
+
 # Data structure to hold animal info and handling, habituation and experiment logs 
 class animal():
     GENOTYPES = ['Stk11 fl/fl','C57Bl/6J','Df(16)1/+']
