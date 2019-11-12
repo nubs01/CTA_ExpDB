@@ -61,9 +61,17 @@ class bottle_test_pane(ttk.Frame):
         self.initUI()
 
     def add_test(self):
+        if self.data.empty:
+            new_time = dt.datetime.combine(dt.datetime.today().date(),dt.time(20,00))
+        else:
+            last_time = self.data.sort_index().iloc[-1].name
+            new_time = last_time + pd.to_timedelta(1, unit='d')
+
+        self.data = self.data.sort_index()
         new_test = dict.fromkeys(['Date/Time',*self.data.columns])
-        today = dt.datetime.combine(dt.datetime.today().date(),dt.time(20,00))
-        new_test['Date/Time'] = dp.get_date_str(today,'%m/%d/%y %H:%M')
+        new_test.pop('Change (g)')
+        new_test['Test Length (min)'] = 10
+        new_test['Date/Time'] = dp.get_date_str(new_time,'%m/%d/%y %H:%M')
         popup = tkw.fill_dict_popup(self.root,new_test)
         self.disable_all()
         self.root.wait_window(popup.top)
@@ -82,12 +90,15 @@ class bottle_test_pane(ttk.Frame):
             elif types[k]==float:
                 try:
                     new_test[k] = round(float(v),2)
-                except ValueError:
+                except TypeError:
                     new_test[k] = None
         if any([x is None or x=='' for x in new_test.values()]):
             return
+
+        new_test['Change (g)'] = float(new_test['Bottle Start (g)']) - float(new_test['Bottle End (g)'])
         df = pd.DataFrame(new_test,index=[date_obj])
         self.data = self.data.append(df)
+        self.data = self.data.sort_index()
         self.master.set_bottle_tests(self.data)
         row = df.iloc[0].tolist()
         self.tree.insert('','end',text=str(self.data.shape[0]-1),

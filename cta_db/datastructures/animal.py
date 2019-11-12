@@ -26,6 +26,7 @@ class animal():
         self.water_dep_start = None # datetime.datetime(year,month,day,min,hr)
         self.bottle_tests =  pd.DataFrame(columns=['Substance','Test Length (min)',
             'Bottle Start (g)','Bottle End (g)','Change (g)'])# dataframe, datetime index
+        self.bottle_tests = self.bottle_tests.astype(dtype={'Bottle Start (g)':float, 'Bottle End (g)': float, 'Change (g)': float})
         self.ioc_tests = [] # List of ioc_test objects
         self.perfusion_date = None
 
